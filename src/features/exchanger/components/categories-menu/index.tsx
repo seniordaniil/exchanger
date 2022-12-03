@@ -19,7 +19,7 @@ export const CategoriesMenu: FC<CategoriesMenuProps> = ({
   onChange,
 }) => {
   const handleChange = useCallback(
-    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       const idx = parseInt(e.currentTarget.dataset.idx as string);
 
       if (idx === -1) onChange(null);
@@ -58,7 +58,7 @@ interface MenuItemProps {
   children: string;
   selected?: boolean;
   disabled?: boolean;
-  onClick: React.MouseEventHandler<HTMLDivElement>;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
   idx: number;
 }
 
@@ -70,15 +70,15 @@ const MenuItem: FC<MenuItemProps> = ({
   selected,
 }) => {
   return (
-    <div
+    <button
       className={clsx(styles.item, {
         [styles.item_selected]: selected,
-        [styles.item_disabled]: disabled,
       })}
       onClick={onClick}
+      disabled={disabled}
       data-idx={idx}
     >
       {children}
-    </div>
+    </button>
   );
 };

@@ -1,6 +1,6 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'store';
+import { RootState, AppDispatch } from 'store';
 import {
   IExchanger,
   fromCurrenciesSelector,
@@ -11,9 +11,14 @@ import {
   toAvailableCategoriesSelector,
   changeToCategory,
   Category,
+  changeFromCategory,
+  fetchFilter,
+  changeFrom,
+  changeTo,
 } from '../../models';
-import { Title } from '../../ui/title';
+import { Title, Wrapper } from '../../ui';
 import { CategoriesMenu } from '../categories-menu';
+import { CurrencyInput } from '../currency-input';
 
 export const Exchanger: FC = () => {
   const exchanger = useSelector<RootState, IExchanger>(selectExchanger);
@@ -27,11 +32,15 @@ export const Exchanger: FC = () => {
   const fromAvailableCategories = fromAvailableCategoriesSelector(exchanger);
   const toAvailableCategories = toAvailableCategoriesSelector(from);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchFilter());
+  }, [dispatch]);
 
   const handleChangeFromCategory = useCallback(
     (category: Category | null) => {
-      dispatch(changeToCategory(category));
+      dispatch(changeFromCategory(category));
     },
     [dispatch],
   );
@@ -43,14 +52,55 @@ export const Exchanger: FC = () => {
     [dispatch],
   );
 
+  const handleChangeFrom = useCallback(
+    (index: number) => {
+      dispatch(changeFrom(fromCurrencies[index]));
+    },
+    [dispatch, fromCurrencies],
+  );
+
+  const handleChangeTo = useCallback(
+    (index: number) => {
+      dispatch(changeTo(toCurrencies[index]));
+    },
+    [dispatch, toCurrencies],
+  );
+
+  const fromCurrenciesMapped = useMemo(
+    () => fromCurrencies.map(({ from }) => from),
+    [fromCurrencies],
+  );
+
   return (
-    <div>
-      <Title>Отдаете</Title>
-      <CategoriesMenu
-        selected={fromCategory}
-        available={fromAvailableCategories}
-        onChange={handleChangeFromCategory}
-      />
-    </div>
+    <Wrapper>
+      <div>
+        <Title>Отдаете</Title>
+        <CategoriesMenu
+          selected={fromCategory}
+          available={fromAvailableCategories}
+          onChange={handleChangeFromCategory}
+        />
+        <CurrencyInput
+          selected={from?.from || null}
+          currencies={fromCurrenciesMapped}
+          onChange={handleChangeFrom}
+        />
+      </div>
+      <div>
+        <Title>Получаете</Title>
+        <CategoriesMenu
+          disabled={!isToAvailable}
+          selected={toCategory}
+          available={toAvailableCategories}
+          onChange={handleChangeToCategory}
+        />
+        <CurrencyInput
+          disabled={!isToAvailable}
+          selected={to}
+          currencies={toCurrencies}
+          onChange={handleChangeTo}
+        />
+      </div>
+    </Wrapper>
   );
 };

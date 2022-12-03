@@ -1,0 +1,7 @@
+.wrapper {
+  width: 340px;
+
+  & > *:nth-child(2n) {
+    margin-top: 28px;
+  }
+}

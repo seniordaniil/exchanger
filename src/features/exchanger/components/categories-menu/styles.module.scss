@@ -2,12 +2,25 @@
   display: flex;
 
   & > .item {
-    &_selected {
+    font-weight: normal;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: rgb(40, 40, 40);
 
+    &:disabled {
+      opacity: .6;
     }
 
-    &_disabled {
+    &:hover {
+      &:not(&_selected), &:not(:disabled) {
+        color: #f0807f;
+      }
+    }
 
+    &_selected:not(:disabled) {
+      color: #ffffff;
+      background-color: #f0807f;
     }
   }
 }

@@ -1,4 +1,10 @@
-import { createReducer, createAction, createSelector } from '@reduxjs/toolkit';
+import {
+  createReducer,
+  createAction,
+  createAsyncThunk,
+  createSelector,
+} from '@reduxjs/toolkit';
+import { filter } from 'data';
 
 export type Category = 0 | 1 | 2;
 
@@ -8,7 +14,7 @@ const categories = [
   ['CASHUSD', 'CASHRUB'],
 ];
 
-interface Currency {
+export interface Currency {
   code: string;
   name: string;
 }
@@ -26,6 +32,10 @@ export interface IExchanger {
   filter: Filter[];
 }
 
+export const fetchFilter = createAsyncThunk('fetchFilter', async () => {
+  return filter;
+});
+
 export const changeFromCategory = createAction<Category | null>(
   'changeFromCategory',
 );
@@ -35,8 +45,6 @@ export const changeToCategory = createAction<Category | null>(
   'changeToCategory',
 );
 export const changeTo = createAction<Currency>('changeTo');
-
-export const changeFilter = createAction<Filter[]>('changeFilter');
 
 export const exchanger = createReducer<IExchanger>(
   {
@@ -48,7 +56,7 @@ export const exchanger = createReducer<IExchanger>(
   },
   (builder) =>
     builder
-      .addCase(changeFilter, (state, action) => {
+      .addCase(fetchFilter.fulfilled, (state, action) => {
         state.filter = action.payload;
       })
       .addCase(changeFromCategory, (state, action) => {
@@ -126,7 +134,7 @@ export const toAvailableCategoriesSelector = createSelector(
     !filter
       ? {}
       : categories.reduce<AvailableCategories>(
-          (previousValue, currentValue, currentIndex, array) => {
+          (previousValue, currentValue, currentIndex) => {
             for (const currency of currentValue) {
               if (filter.to.find(({ code }) => code === currency)) {
                 previousValue[currentIndex] = true;

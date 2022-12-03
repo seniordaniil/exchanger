@@ -6,5 +6,5 @@ interface TitleProps {
 }
 
 export const Title: FC<TitleProps> = ({ children }) => {
-  return <h1 className={styles.title}>{children}</h1>;
+  return <h3 className={styles.title}>{children}</h3>;
 };
