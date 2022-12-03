@@ -16,7 +16,8 @@ import {
   changeFrom,
   changeTo,
 } from '../../models';
-import { Title, Wrapper } from '../../ui';
+import { Wrapper } from '../../ui';
+import { Direction } from '../direction';
 import { CategoriesMenu } from '../categories-menu';
 import { CurrencyInput } from '../currency-input';
 
@@ -73,8 +74,7 @@ export const Exchanger: FC = () => {
 
   return (
     <Wrapper>
-      <div>
-        <Title>Отдаете</Title>
+      <Direction title={'Отдаете'}>
         <CategoriesMenu
           selected={fromCategory}
           available={fromAvailableCategories}
@@ -85,9 +85,8 @@ export const Exchanger: FC = () => {
           currencies={fromCurrenciesMapped}
           onChange={handleChangeFrom}
         />
-      </div>
-      <div>
-        <Title>Получаете</Title>
+      </Direction>
+      <Direction title={'Получаете'}>
         <CategoriesMenu
           disabled={!isToAvailable}
           selected={toCategory}
@@ -100,7 +99,7 @@ export const Exchanger: FC = () => {
           currencies={toCurrencies}
           onChange={handleChangeTo}
         />
-      </div>
+      </Direction>
     </Wrapper>
   );
 };
