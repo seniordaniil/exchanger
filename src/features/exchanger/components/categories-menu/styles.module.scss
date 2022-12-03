@@ -1,0 +1,13 @@
+.menu {
+  display: flex;
+
+  & > .item {
+    &_selected {
+
+    }
+
+    &_disabled {
+
+    }
+  }
+}

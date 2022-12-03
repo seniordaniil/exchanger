@@ -1,6 +1,6 @@
 import { createReducer, createAction, createSelector } from '@reduxjs/toolkit';
 
-type Category = 0 | 1 | 2;
+export type Category = 0 | 1 | 2;
 
 const categories = [
   ['BTC', 'ETH', 'USDTTRC'],
@@ -100,7 +100,7 @@ export const isToAvailableSelector = createSelector(selectSelf, (state) =>
   Boolean(state.from),
 );
 
-type AvailableCategories = Record<number, boolean>;
+export type AvailableCategories = Record<number, boolean>;
 
 export const fromAvailableCategoriesSelector = createSelector(
   selectSelf,
